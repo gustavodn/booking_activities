@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,7 +11,7 @@ class CreateBookingsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->bigIncrements('id');

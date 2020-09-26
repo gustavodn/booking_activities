@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Models\bookings;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class BookingsController extends Controller
@@ -41,10 +41,10 @@ class BookingsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\bookings  $bookings
+     * @param  \App\Models\Booking  $bookings
      * @return \Illuminate\Http\Response
      */
-    public function show(bookings $bookings)
+    public function show(Booking $bookings)
     {
         //
     }
@@ -52,10 +52,10 @@ class BookingsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\bookings  $bookings
+     * @param  \App\Models\Booking  $bookings
      * @return \Illuminate\Http\Response
      */
-    public function edit(bookings $bookings)
+    public function edit(Booking $bookings)
     {
         //
     }
@@ -64,10 +64,10 @@ class BookingsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\bookings  $bookings
+     * @param  \App\Models\Booking  $bookings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, bookings $bookings)
+    public function update(Request $request, Booking $bookings)
     {
         //
     }
@@ -75,10 +75,10 @@ class BookingsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\bookings  $bookings
+     * @param  \App\Models\Booking  $bookings
      * @return \Illuminate\Http\Response
      */
-    public function destroy(bookings $bookings)
+    public function destroy(Booking $bookings)
     {
         //
     }
