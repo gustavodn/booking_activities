@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\BookingsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('activities', [ActivitiesController::class, 'index']);
-Route::group(['prefix' => 'booking'], function () {
-    Route::post('add', 'BookingController@add');
+Route::group(['prefix' => 'activity'], function () {
+    Route::post('book', [BookingsController::class, 'book']);
+    Route::get('find', [ActivitiesController::class, 'find']);
 });

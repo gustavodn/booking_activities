@@ -17,7 +17,7 @@ class CreateBookingsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('activity_id')->nullable(false);
             $table->integer('n_persons');
-            $table->decimal('price',9,2);
+            $table->decimal('book_price');
             $table->dateTime('book_date');
             $table->dateTime('activity_date');
             $table->timestamps();

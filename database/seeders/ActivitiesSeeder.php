@@ -33,6 +33,7 @@ class ActivitiesSeeder extends Seeder
                 'description' => $faker->sentence(10),
                 'from' => $date->format('Y-m-d H:i:s'),
                 'to' => $date->addWeeks(random_int(1, 52))->format('Y-m-d H:i:s'),
+                'price' => $faker->numberBetween($min = 1500, $max = 6000),
                 'popularity_rating' => $faker->randomDigit
             ]);
 

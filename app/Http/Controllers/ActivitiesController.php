@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Repositories\Activity\ActivityInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActivitiesController extends Controller
 {
@@ -26,6 +27,12 @@ class ActivitiesController extends Controller
     public function index(): Collection
     {
         return $this->activity->getAll();
+    }
+
+    public function find(Request $request): array
+    {
+        return $this->activity->findActivitiesByDate($request);
+
     }
 
 }

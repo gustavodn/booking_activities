@@ -1,60 +1,143 @@
 <template>
     <div>
-        <h3 class="text-center">Select your activity</h3><br/>
-
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Author</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="book in books" :key="book.id">
-                <td>{{ book.id }}</td>
-                <td>{{ book.name }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.created_at }}</td>
-                <td>{{ book.updated_at }}</td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <router-link :to="{name: 'edit', params: { id: book.id }}" class="btn btn-primary">Edit
-                        </router-link>
-                        <button class="btn btn-danger" @click="deleteBook(book.id)">Delete</button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <b-navbar toggleable="lg" type="dark" variant="info">
+            <b-navbar-nav>
+                <b-nav-form>
+                    <label>Fecha:</label>
+                    <b-form-input
+                        v-model="date"
+                        id="date"
+                        type="date"
+                        size="sm"
+                        class="mr-sm-2">
+                    </b-form-input>
+                    <label>Nro de Personas:</label>
+                    <b-form-input
+                        v-model="n_persons"
+                        type="number"
+                        id="npersons"
+                        size="sm"
+                        class="mr-sm-2">
+                    </b-form-input>
+                    <b-button :disabled="!searchValidate" @click="searchActivity" size="sm" class="my-2 my-sm-0">Search</b-button>
+                    <b-button @click="allActivities" size="sm" class="ml-2 my-2 my-sm-0">All Activities</b-button>
+                </b-nav-form>
+            </b-navbar-nav>
+        </b-navbar>
+        <div class="text-center m-3">
+            <h3 v-text="title"></h3><br/>
+        </div>
+        <div>
+            <b-table striped hover :items="filteredActivities" :fields="fields">
+                <template v-if="customActivities" v-slot:cell(acciones)="row">
+                    <b-button @click="bookActivity(row.item.id)" size="sm" variant="success" class="mr-1">
+                        Comprar
+                    </b-button>
+                </template>
+            </b-table>
+        </div>
     </div>
 </template>
 
 <script>
+import { BTable } from 'bootstrap-vue'
+
 export default {
+    name: 'bookingActivities',
+    components:{
+        BTable,
+    },
     data() {
         return {
-            books: []
+            customActivities: false,
+            activities: [],
+            fields: [
+                {
+                    key: 'id',
+                    label: '#',
+                },
+                {
+                    key: 'title',
+                    label: 'Titulo',
+                },
+                {
+                    key: 'price',
+                    label: 'Precio por persona',
+                },
+                'Acciones',
+            ],
+            date: '',
+            n_persons: 0,
+            foundActivities: [],
+            title: 'Buscador de Actividades',
         }
     },
     created() {
-        this.axios
-            .get('http://localhost:8000/api/activities')
-            .then(response => {
-                this.books = response.data;
-            });
+        this.title = 'Ingrese una fecha y la cantidad de personas para buscar una actividad'
     },
     methods: {
-        deleteBook(id) {
+        updateShowingPrice() {
+            this.activities.forEach((value, index) => {
+                this.activities[index].price = this.activities[index].price * this.n_persons;
+            })
+        },
+        showMessage(response) {
+            if (response.status === 200) {
+                this.$bvToast.toast('Su actividad fue reservada exitosamente', {
+                    title: 'Registro Guardado!!',
+                    variant: 'success',
+                })
+            }
+        },
+        updateInfo(data) {
+            this.activities = data;
+            this.updateShowingPrice();
+            if (data.length >0){
+                this.title = 'Actividades Encontradas!';
+                this.fields[2].label = 'Precio de reserva ' +'('+ this.n_persons +')';
+                this.customActivities = true;
+            }else{
+                this.title = 'No hay actividades para mostrar, porfavor intente otra fecha';
+            }
+        },
+        allActivities(){
             this.axios
-                .delete(`http://localhost:8000/api/book/delete/${id}`)
+                .get('http://localhost:8000/api/activities')
                 .then(response => {
-                    let i = this.books.map(item => item.id).indexOf(id); // find index of your object
-                    this.books.splice(i, 1)
+                    this.activities = response.data;
+                    this.title = 'Todas las actividades.';
+                    this.fields[2].label = 'Precio por persona';
+                    this.n_persons = 0;
+                    this.customActivities = false;
                 });
+        },
+        bookActivity(activity_id) {
+            let params = {n_persons: this.n_persons, activity_id: activity_id, date:this.date}
+            this.axios
+                .post('http://localhost:8000/api/activity/book',{params})
+                .then(response => (
+                    this.showMessage(response)
+                ))
+                .catch(error => console.log(error))
+                .finally(() => this.loading = false)
+        },
+        searchActivity() {
+            let params = { n_persons: this.n_persons, date: this.date }
+            this.axios
+                .get('http://localhost:8000/api/activity/find/', {params})
+                .then(response => (
+                    this.updateInfo(response.data)
+                ))
+                .catch(error => console.log(error))
+                .finally(() => console.log('OK'))
+        }
+    },
+    computed: {
+        filteredActivities() {
+            return this.activities
+        },
+        searchValidate() {
+            return this.date !== '' && this.n_persons > 0;
         }
     }
 }

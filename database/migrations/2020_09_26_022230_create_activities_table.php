@@ -19,6 +19,7 @@ class CreateActivitiesTable extends Migration
             $table->string('description');
             $table->dateTime('from');
             $table->dateTime('to');
+            $table->decimal('price',9,2);
             $table->integer('popularity_rating')->default(0);
             $table->timestamps();
         });

@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Repositories\Activity\ActivityRepoServiceProvider::class,
+        App\Repositories\Booking\BookingRepoServiceProvider::class,
 
         /*
          * Package Service Providers...
