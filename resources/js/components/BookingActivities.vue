@@ -102,7 +102,7 @@ export default {
         },
         allActivities(){
             this.axios
-                .get('http://localhost:8000/api/activities')
+                .get('//api/activities')
                 .then(response => {
                     this.activities = response.data;
                     this.title = 'Todas las actividades.';
@@ -114,7 +114,7 @@ export default {
         bookActivity(activity_id) {
             let params = {n_persons: this.n_persons, activity_id: activity_id, date:this.date}
             this.axios
-                .post('http://localhost:8000/api/activity/book',{params})
+                .post('//api/activity/book',{params})
                 .then(response => (
                     this.showMessage(response)
                 ))
@@ -124,7 +124,7 @@ export default {
         searchActivity() {
             let params = { n_persons: this.n_persons, date: this.date }
             this.axios
-                .get('http://localhost:8000/api/activity/find/', {params})
+                .get('//api/activity/find/', {params})
                 .then(response => (
                     this.updateInfo(response.data)
                 ))
